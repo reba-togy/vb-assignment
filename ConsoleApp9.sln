@@ -1,25 +1,87 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.9.34701.34
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ConsoleApp9", "ConsoleApp9\ConsoleApp9.vbproj", "{C54C674F-4FE3-4562-B59F-C78C32780510}"
-EndProject
-Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C54C674F-4FE3-4562-B59F-C78C32780510}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C54C674F-4FE3-4562-B59F-C78C32780510}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C54C674F-4FE3-4562-B59F-C78C32780510}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C54C674F-4FE3-4562-B59F-C78C32780510}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {52433641-F20B-4A90-BCE8-5B62DF0A95F3}
-	EndGlobalSection
-EndGlobal
+﻿Class Student
+    Private studentId As Integer
+    Private studentName As String
+    Private age As Integer
+
+    ' Constructor to initialize the student details
+    Public Sub New(id As Integer, name As String, a As Integer)
+        studentId = id
+        studentName = name
+        age = a
+    End Sub
+
+    ' Destructor to clean up resources
+    Protected Overrides Sub Finalize()
+        Console.WriteLine("Destructor Called for Student: " & studentName)
+    End Sub
+
+    ' Function to display student details
+    Public Sub DisplayDetails()
+        Console.WriteLine("Student ID: " & studentId)
+        Console.WriteLine("Student Name: " & studentName)
+        Console.WriteLine("Age: " & age)
+    End Sub
+
+    ' Function to get student ID
+    Public Function GetId() As Integer
+        Return studentId
+    End Function
+End Class
+
+Module Program
+    Sub Main(args As String())
+        Dim choice As Integer = 0
+        Dim students As New List(Of Student)()
+
+        While choice <> 4
+            Console.WriteLine("Menu:")
+            Console.WriteLine("1. Add Student")
+            Console.WriteLine("2. Display All Students")
+            Console.WriteLine("3. Remove Student")
+            Console.WriteLine("4. Exit")
+            Console.Write("Enter your choice: ")
+            choice = Convert.ToInt32(Console.ReadLine())
+
+            Select Case choice
+                Case 1
+                    Console.Write("Enter Student ID: ")
+                    Dim id As Integer = Convert.ToInt32(Console.ReadLine())
+                    Console.Write("Enter Student Name: ")
+                    Dim name As String = Console.ReadLine()
+                    Console.Write("Enter Age: ")
+                    Dim age As Integer = Convert.ToInt32(Console.ReadLine())
+
+                    Dim student As New Student(id, name, age)
+                    students.Add(student)
+                    Console.WriteLine("Student Added Successfully!")
+                Case 2
+                    Console.WriteLine("Student Details:")
+                    For Each s As Student In students
+                        s.DisplayDetails()
+                        Console.WriteLine()
+                    Next
+                Case 3
+                    Console.Write("Enter Student ID to remove: ")
+                    Dim idToRemove As Integer = Convert.ToInt32(Console.ReadLine())
+                    Dim removed As Boolean = False
+
+                    For i As Integer = 0 To students.Count - 1
+                        If students(i).GetId() = idToRemove Then
+                            students.RemoveAt(i)
+                            Console.WriteLine("Student Removed Successfully!")
+                            removed = True
+                            Exit For
+                        End If
+                    Next
+
+                    If Not removed Then
+                        Console.WriteLine("Student with ID " & idToRemove & " not found!")
+                    End If
+                Case 4
+                    Console.WriteLine("Exiting...")
+                Case Else
+                    Console.WriteLine("Invalid Choice! Please select again.")
+            End Select
+        End While
+    End Sub
+End Module
